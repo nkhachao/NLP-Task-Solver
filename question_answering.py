@@ -1,9 +1,17 @@
 from tensorflow import keras
 import numpy as np
 from transformers import AlbertTokenizer, TFAlbertModel
+from pathlib import Path
+
+
+project_root = str(Path(__file__).parent)
+
 
 tokenizer = AlbertTokenizer.from_pretrained('albert-base-v2')
 bert = TFAlbertModel.from_pretrained('albert-base-v2')
+start_classifier = keras.models.load_model(project_root + '/models/question-answering/start_probability')
+end_classifier = keras.models.load_model(project_root + '/models/question-answering/end_probability')
+token_classifier = keras.models.load_model(project_root + '/models/question-answering/classifier')
 
 TOKEN_LIMIT = 512
 
@@ -23,20 +31,64 @@ def embed(question, passage):
     return encode(inputs)
 
 
-start_classifier = keras.models.load_model('../models/start_probability')
-end_classifier = keras.models.load_model('../models/end_probability')
+def split_passage(question, passage):
+    sentences = passage.split('.')
 
+    parts = []
+    part = ''
+    for sentence in sentences:
+        if part == '':
+            part = sentence
+        else:
+            if len(tokenize(question, part + '.' + sentence).input_ids[0]) <= 512:
+                part += '.' + sentence
+            else:
+                parts.append(part)
+                part = sentence
+
+    parts.append(part)
+
+    return parts
+
+
+def preprocess(passage):
+    passage = passage.replace('\r', '')
+    passage = passage.replace('\n', ' ')
+    passage = passage.replace('’', "'")
+    passage = passage.replace('“', '"')
+    passage = passage.replace('”', '"')
+    passage = passage.replace('—', '-')
+
+    return passage
 
 def answer(passage, question):
+    passage = preprocess(passage)
     input_ids = tokenize(question, passage).input_ids[0].numpy()
 
-    embeddings = embed(question, passage)
-    start, end, start_probability, end_probability = span_answer(embeddings)
+    if len(input_ids) <= TOKEN_LIMIT:
+        embeddings = embed(question, passage)
 
-    return tokenizer.decode((input_ids[start:end+1]).tolist())
+        start, end, start_probability, end_probability = answer_span(embeddings)
+
+        return tokenizer.decode((input_ids[start:end+1]).tolist())
+    else:
+        paragraphs = split_passage(question, passage)
+        for paragraph in paragraphs:
+            embeddings = embed(question, paragraph)
+            token_probabilities = np.squeeze(token_classifier(np.array([embeddings])))
+            chosen_tokens = token_probabilities > 0.4
+            #print(token_probabilities[chosen_tokens])
+            #print('Predicted answer:', tokenizer.decode((input_ids[np.array(chosen_tokens).astype(bool)]).tolist()))
+
+            start, end, start_probability, end_probability = answer_span(embeddings)
+
+            print(paragraph)
+            print('Answer: ', tokenizer.decode((input_ids[start:end + 1]).tolist()))
+            print('-----')
 
 
-def span_answer(embeddings):
+
+def answer_span(embeddings):
     start_probabilities = np.squeeze(start_classifier(np.array([embeddings])))
     end_probabilities = np.squeeze(end_classifier(np.array([embeddings])))
 
@@ -76,7 +128,7 @@ def span_answer(embeddings):
 
 
 if __name__ == "__main__":
-    passage = 'In information retrieval, tf–idf, TF*IDF, or TFIDF, short for term frequency–inverse document frequency, is a numerical statistic that is intended to reflect how important a word is to a document in a collection or corpus.[1] It is often used as a weighting factor in searches of information retrieval, text mining, and user modeling. The tf–idf value increases proportionally to the number of times a word appears in the document and is offset by the number of documents in the corpus that contain the word, which helps to adjust for the fact that some words appear more frequently in general. tf–idf is one of the most popular term-weighting schemes today. A survey conducted in 2015 showed that 83% of text-based recommender systems in digital libraries use tf–idf.'
-    question = 'What is tf-idf often used at?'
+    passage = '\'Cause I knew you were trouble when you walked in. So shame on me now. Flew me to places I\'d never been \'Til you put me down, oh. I knew you were trouble when you walked in. So, shame on me now. Flew me to places I\'d never been. Now I\'m lyin\' on the cold hard ground'
+    question = 'When did I know you were trouble?'
 
     print(answer(passage, question))
