@@ -2,7 +2,7 @@ from re import template
 import re
 from flask import Flask, render_template, request, redirect, url_for
 import datetime
-from model import answer
+from question_answering import answer
 
 app = Flask(__name__, template_folder='template')
 

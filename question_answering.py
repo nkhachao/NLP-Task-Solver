@@ -23,14 +23,20 @@ def embed(question, passage):
     return encode(inputs)
 
 
-start_classifier = keras.models.load_model('models/start_probability')
-end_classifier = keras.models.load_model('models/end_probability')
+start_classifier = keras.models.load_model('../models/start_probability')
+end_classifier = keras.models.load_model('../models/end_probability')
 
 
 def answer(passage, question):
     input_ids = tokenize(question, passage).input_ids[0].numpy()
 
     embeddings = embed(question, passage)
+    start, end, start_probability, end_probability = span_answer(embeddings)
+
+    return tokenizer.decode((input_ids[start:end+1]).tolist())
+
+
+def span_answer(embeddings):
     start_probabilities = np.squeeze(start_classifier(np.array([embeddings])))
     end_probabilities = np.squeeze(end_classifier(np.array([embeddings])))
 
@@ -66,12 +72,11 @@ def answer(passage, question):
             else:
                 start = np.where(start_probabilities == start_probability)[0][0]
 
-    #print('start:', start, ', confidence:', start_probability, '| end:', end, ', confidence:', end_probability)
-    return tokenizer.decode((input_ids[start:end+1]).tolist())
+    return start, end, start_probability, end_probability
 
 
 if __name__ == "__main__":
     passage = 'In information retrieval, tf–idf, TF*IDF, or TFIDF, short for term frequency–inverse document frequency, is a numerical statistic that is intended to reflect how important a word is to a document in a collection or corpus.[1] It is often used as a weighting factor in searches of information retrieval, text mining, and user modeling. The tf–idf value increases proportionally to the number of times a word appears in the document and is offset by the number of documents in the corpus that contain the word, which helps to adjust for the fact that some words appear more frequently in general. tf–idf is one of the most popular term-weighting schemes today. A survey conducted in 2015 showed that 83% of text-based recommender systems in digital libraries use tf–idf.'
     question = 'What is tf-idf often used at?'
 
-    print(answer(passage, question))    # January 9, 2007
+    print(answer(passage, question))
