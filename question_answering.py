@@ -70,10 +70,10 @@ def answer(passage, question):
 
         start, end, start_probability, end_probability = answer_span(embeddings)
         spans, confidence_scores = answer_tokens(embeddings)
+        print('Model 1:', tokenizer.decode((input_ids[start:end+1]).tolist()), start_probability, end_probability, (start_probability + end_probability)/2, end - start)
         for span, confidence in zip(spans, confidence_scores):
-            print('(Experimental) Predicted answer:', tokenizer.decode((input_ids[span]).tolist()), confidence)
+            print('Model 2:', tokenizer.decode((input_ids[span]).tolist()), confidence)
 
-        #print(start_probability, end_probability)
         return tokenizer.decode((input_ids[start:end+1]).tolist())
     else:
         paragraphs = split_passage(question, passage)
