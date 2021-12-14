@@ -69,20 +69,22 @@ def answer(passage, question):
         embeddings = embed(question, passage)
 
         start, end, start_probability, end_probability = answer_span(embeddings)
+        spans, confidence_scores = answer_tokens(embeddings)
+        for span, confidence in zip(spans, confidence_scores):
+            print('(Experimental) Predicted answer:', tokenizer.decode((input_ids[span]).tolist()), confidence)
 
+        #print(start_probability, end_probability)
         return tokenizer.decode((input_ids[start:end+1]).tolist())
     else:
         paragraphs = split_passage(question, passage)
         for paragraph in paragraphs:
+            input_ids = tokenize(question, paragraph).input_ids[0].numpy()
+
+            print(paragraph)
             embeddings = embed(question, paragraph)
-            token_probabilities = np.squeeze(token_classifier(np.array([embeddings])))
-            chosen_tokens = token_probabilities > 0.4
-            #print(token_probabilities[chosen_tokens])
-            #print('Predicted answer:', tokenizer.decode((input_ids[np.array(chosen_tokens).astype(bool)]).tolist()))
 
             start, end, start_probability, end_probability = answer_span(embeddings)
 
-            print(paragraph)
             print('Answer: ', tokenizer.decode((input_ids[start:end + 1]).tolist()))
             print('-----')
 
@@ -126,6 +128,30 @@ def answer_span(embeddings):
 
     return start, end, start_probability, end_probability
 
+
+def answer_tokens(embeddings):
+    token_probabilities = np.squeeze(token_classifier(np.array([embeddings])))
+    chosen_tokens = token_probabilities > 0.4
+
+    indices = np.arange(512)
+    chosen_indices = indices[chosen_tokens]
+
+    span = []
+    spans = []
+    for index in chosen_indices:
+        if not span:
+            span.append(index)
+        else:
+            if index - span[-1] == 1:
+                span.append(index)
+            else:
+                spans.append(span)
+                span = [index]
+
+    spans.append(span)
+    confidence_scores = list(map(lambda x: sum(token_probabilities[x]), spans))
+
+    return spans, confidence_scores
 
 if __name__ == "__main__":
     passage = '\'Cause I knew you were trouble when you walked in. So shame on me now. Flew me to places I\'d never been \'Til you put me down, oh. I knew you were trouble when you walked in. So, shame on me now. Flew me to places I\'d never been. Now I\'m lyin\' on the cold hard ground'
