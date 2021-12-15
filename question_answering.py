@@ -74,6 +74,11 @@ def answer(passage, question):
         for span, confidence in zip(spans, confidence_scores):
             print('Model 2:', tokenizer.decode((input_ids[span]).tolist()), confidence)
 
+        if (end - start > 23 and (start_probability + end_probability)/2 < 0.7) or end - start > 25:
+            if spans:
+                if np.max(confidence_scores) > 1.5:
+                    return tokenizer.decode((input_ids[spans[np.argmax(confidence_scores)]]).tolist())
+
         return tokenizer.decode((input_ids[start:end+1]).tolist())
     else:
         paragraphs = split_passage(question, passage)
@@ -131,7 +136,7 @@ def answer_span(embeddings):
 
 def answer_tokens(embeddings):
     token_probabilities = np.squeeze(token_classifier(np.array([embeddings])))
-    chosen_tokens = token_probabilities > 0.4
+    chosen_tokens = token_probabilities > 0.1
 
     indices = np.arange(512)
     chosen_indices = indices[chosen_tokens]
