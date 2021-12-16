@@ -76,7 +76,7 @@ def answer(passage, question):
 
         if (end - start > 23 and (start_probability + end_probability)/2 < 0.7) or end - start > 25:
             if spans:
-                if np.max(confidence_scores) > 1.5:
+                if np.max(confidence_scores) > 1.4:
                     return tokenizer.decode((input_ids[spans[np.argmax(confidence_scores)]]).tolist())
 
         return tokenizer.decode((input_ids[start:end+1]).tolist())
