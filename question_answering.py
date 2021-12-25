@@ -1,34 +1,14 @@
 from tensorflow import keras
 import numpy as np
-from transformers import AlbertTokenizer, TFAlbertModel
 from pathlib import Path
+from models.transformer_decoder import tokenizer, tokenize, TOKEN_LIMIT, embed
 
 
 project_root = str(Path(__file__).parent)
 
-
-tokenizer = AlbertTokenizer.from_pretrained('albert-base-v2')
-bert = TFAlbertModel.from_pretrained('albert-base-v2')
 start_classifier = keras.models.load_model(project_root + '/models/question-answering/start_probability')
 end_classifier = keras.models.load_model(project_root + '/models/question-answering/end_probability')
 token_classifier = keras.models.load_model(project_root + '/models/question-answering/classifier')
-
-TOKEN_LIMIT = 512
-
-
-def tokenize(question, passage):
-    return tokenizer(question, passage, padding='max_length', max_length=TOKEN_LIMIT, return_tensors="tf")
-
-
-def encode(tokenized):
-    outputs = bert(tokenized)
-    last_hidden_states = outputs.last_hidden_state
-    return last_hidden_states[0]
-
-
-def embed(question, passage):
-    inputs = tokenize(question, passage)
-    return encode(inputs)
 
 
 def split_passage(question, passage):
@@ -60,6 +40,7 @@ def preprocess(passage):
     passage = passage.replace('—', '-')
 
     return passage
+
 
 def answer(passage, question):
     passage = preprocess(passage)
