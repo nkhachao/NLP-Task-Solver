@@ -1,4 +1,4 @@
-from models.transformer_decoder import tokenizer, single_embed
+from models.transformer_encoder import tokenizer, single_embed
 from pathlib import Path
 from tensorflow import keras
 import numpy as np

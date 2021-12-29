@@ -1,7 +1,7 @@
 from tensorflow import keras
 import numpy as np
 from pathlib import Path
-from models.transformer_decoder import tokenizer, tokenize, TOKEN_LIMIT, embed
+from models.transformer_encoder import tokenizer, tokenize, TOKEN_LIMIT, embed
 
 
 project_root = str(Path(__file__).parent)
