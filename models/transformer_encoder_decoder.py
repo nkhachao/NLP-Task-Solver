@@ -2,7 +2,7 @@ from transformers import T5Tokenizer
 
 tokenizer = T5Tokenizer.from_pretrained('t5-small')
 
-TOKEN_LIMIT = 512
+TOKEN_LIMIT = 192
 
 
 def tokenize(text):
