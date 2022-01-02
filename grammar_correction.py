@@ -1,4 +1,4 @@
-from models.transformer_encoder_decoder import tokenize, tokenizer
+from models.transformer_encoder_decoder import tokenizer
 from transformers import T5ForConditionalGeneration
 import numpy as np
 from pathlib import Path
@@ -8,11 +8,14 @@ project_root = str(Path(__file__).parent)
 
 model = T5ForConditionalGeneration.from_pretrained(project_root + '/models/grammar-correction/grammar_corrector')
 
+def tokenize(text):
+    return tokenizer(text, return_tensors='pt').input_ids
 
 def preprocess(passage):
     sentences = []
     merge_words = []
 
+    passage = passage.replace('\r', '')
     paragraphs = passage.split('\n')
     for paragraph in paragraphs:
         paragraph_sentences = paragraph.split('. ')
@@ -33,23 +36,49 @@ def construct_response(sentences, merge_words):
     for sentence, merge_word in zip(sentences[1:], merge_words):
         response += merge_word + sentence
 
-    print(response)
     return response
 
 
+def word_difference(a, b):
+    words_a = a.split(' ')
+    words_b = b.split(' ')
+
+    difference = 0
+
+    if len(words_a) > len(words_b):
+        long_list = words_a
+        short_list = words_b
+    else:
+        long_list = words_b
+        short_list = words_a
+
+    for word in long_list:
+        if word not in short_list:
+            difference += 1
+
+    return difference
+
+
 def correct_grammar(passage):
+    fixed_words = 0
     sentences, merge_words = preprocess(passage)
 
     fixed_sentences = []
 
+    print(sentences)
+
     for sentence in sentences:
-        input_ids, attention_mask = tokenize('grammar: ' + sentence)
-        outputs = model.generate(torch.LongTensor(([input_ids])), attention_mask=torch.LongTensor(([attention_mask])))
+        input_ids = tokenize('grammar: ' + sentence)
+        outputs = model.generate(input_ids)
 
         fixed_sentence = tokenizer.decode(outputs[0], skip_special_tokens=True)
         fixed_sentences.append(fixed_sentence)
 
-    return construct_response(fixed_sentences, merge_words)
+        fixed_words += word_difference(tokenizer.decode(input_ids[0], skip_special_tokens=True), fixed_sentence)
+
+    response = str(fixed_words) + ' words fixed.\n' + construct_response(fixed_sentences, merge_words)
+    print(response)
+    return response
 
 
 if __name__ == "__main__":
