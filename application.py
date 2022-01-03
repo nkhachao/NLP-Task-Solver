@@ -1,9 +1,7 @@
 from re import template
 import re
 from flask import Flask, render_template, request, redirect, url_for
-from tensorflow import keras
-import numpy as np
-from transformers import AlbertTokenizer, TFAlbertModel
+import flask
 from pathlib import Path
 from responder import respond
 
@@ -28,7 +26,11 @@ def get_bot_respone():
     if request.args.get('psg') == "":
         return "Please enter the passage!"
     else:
-        return respond(str(request.args.get('psg')), str(request.args.get('msg')))
+        processed_response = ''
+        response = respond(str(request.args.get('psg')), str(request.args.get('msg')))
+        for line in response.split('\n'):
+            processed_response += flask.Markup.escape(line) + flask.Markup('<br />')
+        return processed_response
 
 if __name__ == "__main__":
     app.run()

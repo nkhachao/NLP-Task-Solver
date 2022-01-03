@@ -8,8 +8,10 @@ project_root = str(Path(__file__).parent)
 
 model = T5ForConditionalGeneration.from_pretrained(project_root + '/models/grammar-correction/grammar_corrector')
 
+
 def tokenize(text):
     return tokenizer(text, return_tensors='pt').input_ids
+
 
 def preprocess(passage):
     sentences = []
@@ -27,10 +29,14 @@ def preprocess(passage):
 
     merge_words = merge_words[0:len(sentences) - 1]
 
+    for i in range(len(sentences)):
+        if sentences[i][-1] not in ['?', '!', '.']:
+            sentences[i] = sentences[i] + '.'
+
     return sentences, merge_words
 
 
-def construct_response(sentences, merge_words):
+def recontruct_passage(sentences, merge_words):
     response = sentences[0]
 
     for sentence, merge_word in zip(sentences[1:], merge_words):
@@ -63,7 +69,8 @@ def correct_grammar(passage):
     fixed_words = 0
     sentences, merge_words = preprocess(passage)
 
-    fixed_sentences = []
+    modified_sentences = []
+    checked_sentences = []
 
     print(sentences)
 
@@ -71,17 +78,27 @@ def correct_grammar(passage):
         input_ids = tokenize('grammar: ' + sentence)
         outputs = model.generate(input_ids)
 
-        fixed_sentence = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        fixed_sentences.append(fixed_sentence)
+        checked_sentence = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        checked_sentences.append(checked_sentence)
 
-        fixed_words += word_difference(tokenizer.decode(input_ids[0], skip_special_tokens=True), fixed_sentence)
+        fixed_words += word_difference(sentence, checked_sentence)
 
-    response = str(fixed_words) + ' words fixed.\n' + construct_response(fixed_sentences, merge_words)
+        if fixed_words > 0:
+            modified_sentences.append((sentence, checked_sentence))
+
+    fixed_passage = recontruct_passage(checked_sentences, merge_words)
+    response = str(fixed_words) + ' words fixed.\n\n'
+
+    for faulty_sentence, fixed_sentence in modified_sentences:
+        response += '"' + faulty_sentence + '" -> "' + fixed_sentence + '"\n'
+
+    response += '\nFixed passage:\n' + fixed_passage
+
     print(response)
     return response
 
 
 if __name__ == "__main__":
-    passage = 'I are Hao'
+    passage = 'The iPhone is a line of smartphones designed and marketed by Apple Inc. that use Apple\'s iOS mobile operating system. The first-generation iPhone was announced by then-Apple CEO Steve Jobs on January 9, 2007. Since then, Apple has annually released new iPhone models and iOS updates. As of November 1, 2018, more than 2.2 billion iPhones had been sold.'
 
-    print(correct_grammar(passage))
+    correct_grammar(passage)
