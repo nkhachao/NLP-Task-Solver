@@ -4,16 +4,20 @@ from flask import Flask, render_template, request, redirect, url_for
 import flask
 from pathlib import Path
 from responder import respond
-
-project_root = str(Path(__file__).parent)
+import pyttsx3
+import threading
 
 app = Flask(__name__, template_folder='template')
 
-# passage = 'The iPhone is a line of smartphones designed and marketed by Apple Inc. that use Apple\'s iOS mobile operating system. The first-generation iPhone was announced by then-Apple CEO Steve Jobs on January 9, 2007. Since then, Apple has annually released new iPhone models and iOS updates. As of November 1, 2018, more than 2.2 billion iPhones had been sold.'
-# question = 'When was the first-generation iPhone announced?'
 
-# passage = '\'Cause I knew you were trouble when you walked in. So shame on me now. Flew me to places I\'d never been \'Til you put me down, oh. I knew you were trouble when you walked in. So, shame on me now. Flew me to places I\'d never been. Now I\'m lyin\' on the cold hard ground'
-#     question = 'When did I know you were trouble?'
+engine = pyttsx3.init(driverName='nsss')
+
+
+def speak(text):
+    if engine._inLoop:
+        engine.endLoop()
+    engine.say(text)
+    engine.runAndWait()
 
 
 
@@ -28,6 +32,11 @@ def get_bot_respone():
     else:
         processed_response = ''
         response = respond(str(request.args.get('psg')), str(request.args.get('msg')))
+
+        t1 = threading.Thread(target=speak, args=(response,))
+        t1.start()
+        t1.join()
+
         for line in response.split('\n'):
             processed_response += flask.Markup.escape(line) + flask.Markup('<br />')
         return processed_response

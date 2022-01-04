@@ -2,7 +2,6 @@ from models.transformer_encoder_decoder import tokenizer
 from transformers import T5ForConditionalGeneration
 import numpy as np
 from pathlib import Path
-import torch
 
 project_root = str(Path(__file__).parent)
 
