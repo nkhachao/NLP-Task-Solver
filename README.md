@@ -1,4 +1,4 @@
-# Trasformer-based Natural Language Task Solving App
+# Transformer-based Natural Language Task Solving App
 
 This is a project for our Intelligent Systems course.
 
