@@ -8,6 +8,8 @@ This project was initially about developing a simple question-answering (QA) app
 
 We trained / fine-tuned every model for this app by ourselves. We also developed all of the prediction heads. All models used in this app are Transformer-based.
 
+This repository uses Google Drive to store large files. To see all model files, clone this repository and run `application.py`.
+
   Model | Type | Parameters | Training data | Training time | Evaluation
 ---|---|---|---|---|---
 `question_answering`/`start_probability` | Frozen pre-trained Transformer encoder and trained prediction head | 11M | SQuAD 2.0 | 12 hours on CPU | _ 
@@ -20,3 +22,5 @@ We trained / fine-tuned every model for this app by ourselves. We also developed
 ## Usage
 
 This is a web app based on the Flask framework. To open the GUI, run `application.py`, then follow the URL displayed (http://127.0.0.1:5000/ by default).
+
+On the first run, the app will take some time to download large files from Google Drive.
