@@ -1,5 +1,4 @@
-from re import template
-import re
+from model_manager import fetch_models
 from flask import Flask, render_template, request, redirect, url_for
 import flask
 from pathlib import Path
