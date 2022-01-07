@@ -9,7 +9,7 @@ This project was initially about developing a simple question-answering (QA) app
   Model | Type | Parameters | Training data | Training time | Evaluation
 ---|---|---|---|---|---
 `question_answering`/`start_probability` | Frozen pre-trained Transformer encoder and trained prediction head | 11M | SQuAD 2.0 | 12 hours on CPU | _ 
-`question_answering`/`start_probability` | Frozen pre-trained Transformer encoder and trained prediction head | 11M | SQuAD 2.0 | 12 hours on CPU | _ 
+`question_answering`/`end_probability` | Frozen pre-trained Transformer encoder and trained prediction head | 11M | SQuAD 2.0 | 12 hours on CPU | _ 
 `question_answering`/`classifier` | Frozen pre-trained Transformer encoder and trained prediction head | 11M | SQuAD 2.0 | 12 hours on CPU | _ 
 `grammar_correction`/`grammar_corrector` | Fine-tuned pre-trained Transformer encoder-decoder | 60M | C4_200M | 3 hours on 3080 Ti | _ 
 `named-entity-recognition`/`ner_tagger` | Frozen pre-trained Transformer encoder and trained prediction head | 11M | CoNLL-2003 | 6 hours on CPU | _ 
