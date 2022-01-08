@@ -29,26 +29,26 @@ On the first run, the app will take some time to download large files from Googl
 
 Insert a passage and a question related to the passage. The app will answer your question by extracting a piece of text from the passage.
 
-QA.png![qa](https://user-images.githubusercontent.com/62071233/148634598-8ee8b9b0-a861-4ca9-ab91-013e3c100b04.png)
+![qa](https://user-images.githubusercontent.com/62071233/148634598-8ee8b9b0-a861-4ca9-ab91-013e3c100b04.png)
 
 ## Multiple Choice Question Answering (MCQA)
 
-Insert a passage and a question related to the passage, followed by 4 possible choices. The app will pick one of your provided choices.
+Insert a passage and a question related to the passage, followed by 4 possible choices. The app will pick one of your provided choices.  
 Example question format: `<question> A. <choice 0> B. <choice 1> C. <choice 2> D. <choice 3>`
 
-MCQA.png![mcqa](https://user-images.githubusercontent.com/62071233/148634747-e1f0e1c0-e7be-43e2-a56f-0f5a198993c2.png)
+![mcqa](https://user-images.githubusercontent.com/62071233/148634747-e1f0e1c0-e7be-43e2-a56f-0f5a198993c2.png)
 
 ## Named Entity Recognition (NER)
 
-Insert a passage and a request for named entity recognition. The app will return a list of all of the named entities in the passage.
+Insert a passage and a request for named entity recognition. The app will return a list of all of the named entities in the passage.  
 Example question: `What are the named entities in this passage?`
 
-NER.png![ner](https://user-images.githubusercontent.com/62071233/148634814-69402548-ef92-4d7a-bb59-c0e67db76a16.png)
+![ner](https://user-images.githubusercontent.com/62071233/148634814-69402548-ef92-4d7a-bb59-c0e67db76a16.png)
 
 ## Grammatical Error Correction (GEC)
 
-Insert a passage with grammatical errors and a request to fix grammatical errors. The app will return a list of fixed errors in the passage.
+Insert a passage with grammatical errors and a request to fix grammatical errors. The app will return a list of fixed errors in the passage.  
 Example question: `Correct this passage?`
 
-GEC.png![gec](https://user-images.githubusercontent.com/62071233/148634872-0b3bfcab-dea3-4ea1-8b64-16f952139add.png)
+![gec](https://user-images.githubusercontent.com/62071233/148634872-0b3bfcab-dea3-4ea1-8b64-16f952139add.png)
 
