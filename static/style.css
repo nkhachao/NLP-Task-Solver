@@ -95,7 +95,7 @@ input[type="submit"] {
     width: 10%;
     height: 40px;
     border: 1px solid;
-    background: #ffab3d;
+    background: #f27c0d;
     border-radius: 25px;
     font-size: 16px;
     color: #ffffff;
@@ -157,7 +157,7 @@ input[type="submit"]:hover {
 .boxchat .userText {
     background-color: #ffffff;
     padding: 8px;
-    border-radius: 15px;
+    border-radius: 10px;
     border-width: 2px;
     border-style: solid;
     border-color: #000000;
@@ -173,9 +173,9 @@ input[type="submit"]:hover {
 }
 
 .boxchat .botText {
-    background-color: #ff8615;
+    background-color: #f27c0d;
     padding: 8px;
-    border-radius: 15px;
+    border-radius: 10px;
     word-break: break-all;
     width: fit-content;
     color: white;
