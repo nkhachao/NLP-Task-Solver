@@ -2,6 +2,7 @@ from question_answering import answer
 from named_entity_recognition import extract_named_entities
 from grammar_correction import correct_grammar
 from multiple_choice import pick_choice
+from natural_language_inference import classify_relationship
 
 def respond(passage, question):
     intent = classify_intent(question)
@@ -12,6 +13,8 @@ def respond(passage, question):
         return correct_grammar(passage)
     elif intent == 'MCQA':
         return pick_choice(question, passage)
+    elif intent == 'NLI':
+        return classify_relationship(question, passage)
     elif intent == 'QA':
         return answer(passage, question)
 
@@ -24,5 +27,7 @@ def classify_intent(question):
         return 'GEC'
     if 'a. ' in request and 'b. ' in request and 'c. ' in request and 'd. ' in request:
         return 'MCQA'
+    if ('relevant' in request or 'true' in request) and '"' in request:
+        return 'NLI'
     else:
         return 'QA'

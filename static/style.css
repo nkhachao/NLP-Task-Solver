@@ -161,7 +161,6 @@ input[type="submit"]:hover {
     border-width: 2px;
     border-style: solid;
     border-color: #000000;
-    word-break: break-all;
     width: fit-content;
     float: right;
     color: black;
@@ -176,11 +175,11 @@ input[type="submit"]:hover {
     background-color: #f27c0d;
     padding: 8px;
     border-radius: 10px;
-    word-break: break-all;
     width: fit-content;
     color: white;
     float: left;
     font-family: monospace;
     font-size: 17px;
     text-align: left;
+    word-wrap: break-word;
 }
