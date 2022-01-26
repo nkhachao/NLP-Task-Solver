@@ -18,6 +18,9 @@ This repository uses Google Drive to store large files. To see all model files, 
 `grammar_correction`/`grammar_corrector` | Fine-tuned pre-trained Transformer encoder-decoder | 60M | Subset of C4_200M | 3 hours on RTX 3080 Ti | _ 
 `named-entity-recognition`/`ner_tagger` | Frozen pre-trained Transformer encoder and trained prediction head | 11M | CoNLL-2003 | 6 hours on CPU | _ 
 `multiple-choice`/`choice_picker` | Fine-tuned pre-trained Transformer encoder-decoder | 220M | RACE | 3 hours on RTX 3060 | 67.5 % 
+`natural_language_inference`/`discrete` | Fine-tuned pre-trained Transformer encoder and trained prediction head. Premise and hypothesis encoded separately | 11M | MultiNLI | 2.5 hours on RTX 3090 | 60.3 %
+`natural_language_inference`/`joined` | Fine-tuned pre-trained Transformer encoder and trained prediction head. Premise and hypothesis encoded together | 11M | MultiNLI | 4 hours on RTX 3090 | 81.6 % 
+
 
 ## Usage
 
