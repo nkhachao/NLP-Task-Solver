@@ -3,6 +3,7 @@ from named_entity_recognition import extract_named_entities
 from grammar_correction import correct_grammar
 from multiple_choice import pick_choice
 from natural_language_inference import classify_relationship
+from zero_shot_classification import pick_class
 
 def respond(passage, question):
     intent = classify_intent(question)
@@ -15,6 +16,8 @@ def respond(passage, question):
         return pick_choice(question, passage)
     elif intent == 'NLI':
         return classify_relationship(question, passage)
+    elif intent == 'ZTC':
+        return pick_class(question, passage)
     elif intent == 'QA':
         return answer(passage, question)
 
@@ -29,5 +32,7 @@ def classify_intent(question):
         return 'MCQA'
     if ('relevant' in request or 'true' in request) and '"' in request:
         return 'NLI'
+    if 'class' in request and '"' in request:
+        return 'ZTC'
     else:
         return 'QA'

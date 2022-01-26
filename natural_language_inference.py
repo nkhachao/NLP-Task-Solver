@@ -1,6 +1,6 @@
 from pathlib import Path
 import numpy as np
-from models.natural_language_inference.discrete import predict_nli, label_types
+from models.natural_language_inference.joined import predict_nli, label_types
 
 project_root = str(Path(__file__).parent)
 

@@ -9,7 +9,7 @@ import threading
 app = Flask(__name__, template_folder='template')
 
 
-engine = pyttsx3.init(driverName='nsss')
+engine = pyttsx3.init()
 
 
 def speak(text):
@@ -41,4 +41,4 @@ def get_bot_respone():
         return processed_response
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=5000)

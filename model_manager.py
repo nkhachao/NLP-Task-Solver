@@ -6,11 +6,13 @@ project_root = str(Path(__file__).parent)
 
 model_directories = ['/models/multiple-choice/choice_picker/pytorch_model.bin',
                      '/models/grammar-correction/grammar_corrector/pytorch_model.bin',
-                     '/models/natural_language_inference/discrete/transformer/pytorch_model.bin']
+                     '/models/natural_language_inference/discrete/transformer/pytorch_model.bin',
+                     '/models/natural_language_inference/joined/transformer/pytorch_model.bin']
 
 model_file_ids = ['1JarYCNGA2-MFCM4yT_gRDI0ahG1lKEcQ',
                   '1hHBy3W9GHshxlk74IcWRwvyWPGRzG_hv',
-                  '1qGCFfadU-glx2KFwPd-qV4B0DBy2TRph']
+                  '1qGCFfadU-glx2KFwPd-qV4B0DBy2TRph',
+                  '1eYqtm4-yf08wLT_1hagr-_vUBOIz1yF_']
 
 
 def download_model(id, save_directory):
