@@ -19,7 +19,7 @@ def respond(passage, question):
     elif intent == 'ZTC':
         return pick_class(question, passage)
     elif intent == 'QA':
-        return answer(passage, question)
+        return answer(question, passage)
 
 
 def classify_intent(question):
