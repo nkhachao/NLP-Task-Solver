@@ -12,9 +12,8 @@ This repository uses Google Drive to store large files. To see all model files, 
 
   Model | Type | Parameters | Training data | Training time | Evaluation
 ---|---|---|---|---|---
-`question_answering`/`start_probability` | Frozen pre-trained Transformer encoder and trained prediction head | 11M | SQuAD 2.0 | 12 hours on CPU | _ 
-`question_answering`/`end_probability` | Frozen pre-trained Transformer encoder and trained prediction head | 11M | SQuAD 2.0 | 12 hours on CPU | _ 
-`question_answering`/`classifier` | Frozen pre-trained Transformer encoder and trained prediction head | 11M | SQuAD 2.0 | 12 hours on CPU | _ 
+`question_answering`/`frozen` | Frozen pre-trained Transformer encoder and trained prediction heads | 11M | SQuAD 1.1 | 24 hours on CPU | 32.3 % F1 
+`question_answering`/`fine_tuned` | Fine-tuned pre-trained Transformer encoder and trained prediction head | 11M | SQuAD 1.1 | 5 hours on RTX 3090 | 84.1 % F1 
 `grammar_correction`/`grammar_corrector` | Fine-tuned pre-trained Transformer encoder-decoder | 60M | Subset of C4_200M | 3 hours on RTX 3080 Ti | _ 
 `named-entity-recognition`/`ner_tagger` | Frozen pre-trained Transformer encoder and trained prediction head | 11M | CoNLL-2003 | 6 hours on CPU | _ 
 `multiple-choice`/`choice_picker` | Fine-tuned pre-trained Transformer encoder-decoder | 220M | RACE | 3 hours on RTX 3060 | 67.5 % 
